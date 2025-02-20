@@ -49,17 +49,19 @@ func main() {
 
 		for _, nic := range page.Value {
 			// Check if the NIC is attached to the specified VM
-			if nic.Properties.VirtualMachine != nil && *nic.Properties.VirtualMachine.ID == fmt.Sprintf("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Compute/virtualMachines/%s", subscriptionID, *resourceGroupName, *vmName) {
-				if *nicId == "" || *nic.Name == *nicId {
-					for _, ipConfig := range nic.Properties.IPConfigurations {
-						address := ipConfig.Properties.PrivateIPAddress
-						if address != nil {
-							addr, err := netip.ParseAddr(*address)
-							if err != nil {
-								log.Fatalf("could not parse private ip address: %s", *address)
-							}
-							if prefix.Contains(addr) {
-								fmt.Printf("%s\n", *address)
+			if nic.Properties.VirtualMachine != nil {
+				if *vmName == "" || *nic.Properties.VirtualMachine.ID == fmt.Sprintf("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Compute/virtualMachines/%s", subscriptionID, *resourceGroupName, *vmName) {
+					if *nicId == "" || *nic.Name == *nicId {
+						for _, ipConfig := range nic.Properties.IPConfigurations {
+							address := ipConfig.Properties.PrivateIPAddress
+							if address != nil {
+								addr, err := netip.ParseAddr(*address)
+								if err != nil {
+									log.Fatalf("could not parse private ip address: %s", *address)
+								}
+								if prefix.Contains(addr) {
+									fmt.Printf("%s\n", *address)
+								}
 							}
 						}
 					}
