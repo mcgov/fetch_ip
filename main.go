@@ -1,5 +1,13 @@
 package main
 
+/*
+a dumb application to fetch the private IP of a vNIC on a given Azure VM.
+
+This needs the actual azure resource name of the vNIC, not the VM's internal name like eth0.
+
+This is useful when you are not using dynamic assignment of private ip addresses for an azure vnet.
+*/
+
 import (
 	"context"
 	"flag"
